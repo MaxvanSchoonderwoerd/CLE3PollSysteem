@@ -22,7 +22,7 @@ if (isset($_GET['id'])) {
             $stmt = $pdo->prepare('UPDATE poll_answers SET votes = votes + 1 WHERE id = ?');
             $stmt->execute([$_POST['poll_answer']]);
             // Redirect user to the result page
-            header ('Location: result.php?id=' . $_GET['id']);
+            header('Location: result.php?id=' . $_GET['id']);
             exit;
         }
     } else {
@@ -37,24 +37,33 @@ $stmt->execute([$_GET['id']]);
 $pollQ = $stmt->fetch(PDO::FETCH_ASSOC);
 ?>
 
-<?=template_header('Poll Vote')?>
+<?= template_header('Poll Vote') ?>
 
-<div class="content poll-vote">
-    <h2><?=$poll['title']?></h2>
-    <p><?=$poll['desc']?></p>
-    <p><?=$pollQ['question']?></p>
-    <form action="vote.php?id=<?=$_GET['id']?>" method="post">
+<section class="centered">
+    <h2 class="header">Vote</h2>
+</section>
+
+<div class="centered">
+
+    <h1>Naam: <?= $poll['title'] ?></h1>
+    <h1>Beschrijving: <?= $poll['desc'] ?></h1>
+    <h1>Vraag: <?= $pollQ['question'] ?></h1>
+
+    <form class="poll" action="vote.php?id=<?= $_GET['id'] ?>" method="post">
         <?php for ($i = 0; $i < count($poll_answers); $i++): ?>
-            <label>
-                <input type="radio" name="poll_answer" value="<?=$poll_answers[$i]['id']?>"<?=$i == 0 ? ' checked' : ''?>>
-                <?=$poll_answers[$i]['title']?>
+
+            <label class="pollBtn blue">
+                <input type="radio" name="poll_answer"
+                       value="<?= $poll_answers[$i]['id'] ?>"<?= $i == 0 ? ' checked' : '' ?>>
+                <?= $poll_answers[$i]['title'] ?>
             </label>
+
         <?php endfor; ?>
         <div>
-            <input type="submit" value="Vote">
-            <a href="result.php?id=<?=$poll['id']?>">View Result</a>
+            <input class="btn" type="submit" value="Vote">
+            <a  class="btn" href="result.php?id=<?= $poll['id'] ?>">View Result</a>
         </div>
     </form>
 </div>
 
-<?=template_footer()?>
+<?= template_footer() ?>

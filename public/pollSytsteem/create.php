@@ -21,10 +21,10 @@ if (!empty($_POST)) {
     // Get the question
     $question = isset($_POST['question']) ? $_POST['question'] : '';
     // Sends it to the DB
-        $stmt = $pdo->prepare('INSERT INTO poll_questions VALUE (NULL,?,?)');
-        $stmt->execute([$poll_id, $question]);
-        // Gets the primary key to tie it to the answers
-        $poll_questions_id = $pdo->lastInsertId();
+    $stmt = $pdo->prepare('INSERT INTO poll_questions VALUE (NULL,?,?)');
+    $stmt->execute([$poll_id, $question]);
+    // Gets the primary key to tie it to the answers
+    $poll_questions_id = $pdo->lastInsertId();
     // Get the answers and convert the multiline string to an array, so we can add each answer to the "poll_answers" table
     $answers = isset($_POST['answers']) ? explode(PHP_EOL, $_POST['answers']) : '';
     foreach ($answers as $answer) {
@@ -32,7 +32,7 @@ if (!empty($_POST)) {
         if (empty($answer)) continue;
         // Add answer to the "poll_answers" table
         $stmt = $pdo->prepare('INSERT INTO poll_answers VALUES (NULL, ?, ? ,0,?)');
-        $stmt->execute([$poll_id, $answer,$poll_questions_id]);
+        $stmt->execute([$poll_id, $answer, $poll_questions_id]);
     }
     // Output message
     $msg = 'Created Successfully!';
@@ -40,62 +40,39 @@ if (!empty($_POST)) {
 }
 ?>
 
-<?=template_header('Create Poll')?>
+<?= template_header('Create Poll') ?>
 <script>
 
 </script>
 
-<div class="content update">
-    <h2>Create Poll</h2>
-    <form action="create.php" method="post">
-        <label for="title">Titel</label>
-        <input type="text" name="title" id="title">
-        <label for="desc">Beschrijving</label>
-        <input type="text" name="desc" id="desc">
+<section class="centered">
+    <div>
+        <h1 class="header">Create Poll</h1>
+    </div>
+</section>
 
+<section class="centered">
+    <form action="create.php" method="post" class="form">
+        <label class="createLabel" for="title">Titel</label>
+        <input class="createInput" type="text" name="title" id="title">
 
-        <label for="question">Vraag</label>
-        <input type="text" name="question" id="question">
-        <label for="answers">Antwoorden (1 antwoord per zin)</label>
-        <textarea name="answers" id="answers" required></textarea>
+        <label class="createLabel" for="desc">Beschrijving</label>
+        <input class="createInput" type="text" name="desc" id="desc">
 
+        <label class="createLabel" for="question">Vraag</label>
+        <input class="createInput" type="text" name="question" id="question">
 
-            <input type="button" onclick="addInput()"/>
+        <label class="createLabel" for="answers">Antwoorden (1 antwoord per zin)</label>
+        <textarea class="createInput" name="answers" id="answers" required></textarea>
 
-            <span id="responce"></span>
-            <script>
-                var countBox =1;
-                var boxName = 0;
-                function addInput()
-                {
-                    var boxName="question"+countBox;
-                    document.getElementById('responce').innerHTML+='<br/><input type="text" id="'+boxName+'" value="'+boxName+'" "  /><br/>';
-                    countBox += 1;
-                }
-            </script>
-
-
-        <input type="button" onclick="addInput()"/>
-
-        <span id="response"></span>
-            <script>
-            var countBox2 =1;
-            var boxName2 = 0;
-            function addInput()
-            {
-                var boxName2="answer"+countBox2;
-                document.getElementById('response').innerHTML+='<br/><input type="text" id="'+boxName2+'" value="'+boxName2+'" "  /><br/>';
-                document.getElementById('response').innerHTML+='<br/><input type="text" id="'+boxName2+'" value="'+boxName2+'" "  /><br/>';
-                countBox2 += 1;
-            }
-        </script>
-
-        <input type="submit" value="Create">
+        <input type="submit" value="Create" class="btn">
     </form>
-    <?php if ($msg): ?>
-        <p><?=$msg?></p>
-    <?php endif; ?>
+</section>
+
+<?php if ($msg): ?>
+    <p class="centered succes"><?= $msg ?></p>
+<?php endif; ?>
 </div>
 
 
-<?=template_footer()?>
+<?= template_footer() ?>
